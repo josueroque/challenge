@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "../DataTable/DataTable";
 import Container from "@mui/material/Container";
 import { Button, FormGroup, Input, InputMask, TextField } from "@mui/material";
+import { getMembers } from "../../services/apiService";
 import swal from "sweetalert";
-import { useState } from "react";
 
 const Form = () => {
   const [firstName, setFirstName] = useState("");
@@ -11,15 +11,17 @@ const Form = () => {
   const [address, setAddress] = useState(null);
   const [SSN, setSSN] = useState(null);
 
-  const submit = () => {
-    /*     swal({
-      title: "Good job!",
-      text: "You clicked the button!",
-      icon: "success",
-    }); */
-  };
+  const [members, setMembers] = useState([]);
 
-  console.log(firstName);
+  useEffect(() => {
+    console.log("hola");
+    const fetchedMembers = getMembers();
+    // console.log(fetchedMembers);
+    //if (fetchedMembers.length > 1) setMembers(fetchedMembers);
+  }, []);
+
+  const submit = () => {};
+
   return (
     <div
       style={{
@@ -27,7 +29,7 @@ const Form = () => {
         justifyContent: "space-around",
       }}
     >
-      <FormGroup style={{ minWidth: 500, marginTop: 50 }}>
+      <FormGroup style={{ minWidth: 500, margin: 50 }}>
         <TextField
           value={firstName}
           onChange={(e) => {
@@ -68,7 +70,7 @@ const Form = () => {
 
         <Button onClick={submit}> Submit </Button>
       </FormGroup>
-      <DataTable></DataTable>
+      <DataTable rows={members}></DataTable>
     </div>
   );
 };
