@@ -1,8 +1,8 @@
-# NewCombin Front end challenge
+# Front end challenge
 
 ## Description
 
-This is the solution for the NewCombin frontend code challenge
+This is the solution for the frontend code challenge
 
 ## Dependencies Install
 
@@ -14,8 +14,6 @@ npm install
 
 This will install all modules listed as dependencies in package.json.
 
-```
-
 ## To run the App in dev mode
 
 ```
@@ -23,6 +21,11 @@ This will install all modules listed as dependencies in package.json.
 npm start
 
 ```
+
+## Enviroment Variables
+
+In order to use the application in dev mode, you must set the values for enviroment variables REACT_APP_USERNAME,
+REACT_APP_PASSWORD and REACT_APP_BASEURL.
 
 ## Technologies
 
@@ -36,5 +39,6 @@ This project was built using the following technologies:
 
 ### react-input-mask
 
+```
 
 ```
