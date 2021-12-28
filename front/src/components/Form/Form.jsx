@@ -1,16 +1,22 @@
 import React, { useEffect, useState, useCallback } from "react";
 import DataTable from "../DataTable/DataTable";
+import Loader from "../Loader/Loader";
 import Container from "@mui/material/Container";
-import { Button, FormGroup, TextField } from "@mui/material";
+import { Button, FormGroup, TextField, Typography } from "@mui/material";
 import InputMask from "react-input-mask";
 import { getMembers, saveMember } from "../../services/apiService";
 import swal from "sweetalert";
+import { margin } from "@mui/system";
 
 const Form = () => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [address, setAddress] = useState(null);
   const [SSN, setSSN] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+
+  const [timeCounter, setTimeCounter] = useState(true);
 
   const [disabled, setDisabled] = useState(true);
 
@@ -22,11 +28,9 @@ const Form = () => {
     if (!lastName.trim().length > 1) return false;
     if (!address.trim().length > 1) return false;
     let validateMask = true;
-    console.log(SSN.split(""));
     SSN.split("").forEach((item) => {
       if (item === "_") validateMask = false;
     });
-    console.log(validateMask);
     if (validateMask) {
       setDisabled(false);
     } else setDisabled(true);
@@ -34,7 +38,10 @@ const Form = () => {
   }, [SSN, address, firstName, lastName]);
 
   useEffect(() => {
-    loadMembers();
+    setTimeout(() => {
+      loadMembers();
+      setLoading(false);
+    }, 2000);
   }, []);
 
   useEffect(() => {
@@ -44,15 +51,27 @@ const Form = () => {
   const loadMembers = async () => {
     const membersData = await getMembers();
     setMembers(membersData);
-    return membersData;
+    return;
   };
 
   const submit = async () => {
-    const newMember = { firstName, lastName, address, ssn: SSN };
-    if (validate()) {
+    try {
+      const newMember = { firstName, lastName, address, ssn: SSN };
       const response = await saveMember(newMember);
-      console.log(response);
       if (response.status === 200) setMembers([...members, newMember]);
+      swal({
+        title: "Congratulations",
+        text: "The member information has been saved",
+        icon: "success",
+        dangerMode: false,
+      });
+    } catch (error) {
+      swal({
+        title: "Error!",
+        text: "Something wrong happened",
+        icon: "error",
+        dangerMode: true,
+      });
     }
   };
 
@@ -75,7 +94,7 @@ const Form = () => {
         <TextField
           value={firstName}
           onChange={(e) => {
-            setFirstName(e.target.value);
+            setFirstName(e.target.value.trim());
           }}
           required
           placeholder='First Name'
@@ -84,7 +103,7 @@ const Form = () => {
         <TextField
           value={lastName}
           onChange={(e) => {
-            setLastName(e.target.value);
+            setLastName(e.target.value.trim());
           }}
           required
           placeholder='Second Name'
@@ -93,7 +112,7 @@ const Form = () => {
         <TextField
           value={address}
           onChange={(e) => {
-            setAddress(e.target.value);
+            setAddress(e.target.value.trim());
           }}
           required
           placeholder='Address'
@@ -118,7 +137,16 @@ const Form = () => {
           </Button>
         </Container>
       </FormGroup>
-      <DataTable rows={members}></DataTable>
+      {loading ? (
+        <div className='loader-container'>
+          <Loader />
+          <Typography align='left' variant='h4'>
+            Loading data
+          </Typography>
+        </div>
+      ) : (
+        <DataTable rows={members}></DataTable>
+      )}
     </div>
   );
 };

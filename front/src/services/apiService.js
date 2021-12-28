@@ -4,7 +4,6 @@ const username = process.env.REACT_APP_USERNAME;
 const password = process.env.REACT_APP_PASSWORD;
 
 export const getMembers = async (filter) => {
-  //let queryUrl = baseUrl}characters?apikey=${apiKey}&hash=${hash}&ts=${ts}&limit=50`;
   try {
     const queryUrl = `${baseUrl}/api/members`;
     const currentToken = await getToken();
@@ -29,15 +28,11 @@ export async function saveMember(member) {
     const config = {
       headers: {
         Authorization: `Bearer ${currentToken}`,
-        //"Content-Type": "multipart/form-data",
       },
     };
-    console.log(queryUrl);
-    console.log(currentToken);
-    console.log(config);
-    console.log(member);
+
     const response = await axios.post(queryUrl, member, config);
-    console.log(response);
+
     return response;
   } catch (error) {
     console.log(error);
