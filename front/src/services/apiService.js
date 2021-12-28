@@ -1,50 +1,53 @@
 import axios from "axios";
-const baseUrl = "http://localhost:8081/";
-const username = "sarah";
-const password = "connor";
-//axios.defaults.headers.common = { Authorization: `Bearer ${tempToken}` };
+const baseUrl = process.env.REACT_APP_BASEURL;
+const username = process.env.REACT_APP_USERNAME;
+const password = process.env.REACT_APP_PASSWORD;
 
-export async function getMembers(filter, token) {
+export const getMembers = async (filter) => {
   //let queryUrl = baseUrl}characters?apikey=${apiKey}&hash=${hash}&ts=${ts}&limit=50`;
   try {
-    console.log("desde service2");
-    let queryUrl = `${baseUrl}api/members`;
-    let currentToken = await getToken();
-    let config = {
+    const queryUrl = `${baseUrl}/api/members`;
+    const currentToken = await getToken();
+    const config = {
       headers: {
         Authorization: `Bearer ${currentToken}`,
       },
     };
-    console.log(queryUrl);
-    console.log(config);
+
     const response = await axios.get(queryUrl, config);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export async function saveMember(member) {
+  try {
+    let queryUrl = `${baseUrl}/api/members`;
+    const currentToken = await getToken();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${currentToken}`,
+        //"Content-Type": "multipart/form-data",
+      },
+    };
+    console.log(queryUrl);
+    console.log(currentToken);
+    console.log(config);
+    console.log(member);
+    const response = await axios.post(queryUrl, member, config);
     console.log(response);
     return response;
   } catch (error) {
     console.log(error);
-  }
-}
-
-export async function saveMember(member, token) {
-  try {
-    let queryUrl = `${baseUrl}/api/members`;
-    const config = {
-      headers: {
-        "x-access-token": `${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
-    const response = await axios.post(queryUrl, member, config);
-    return response;
-  } catch (error) {
     throw error;
   }
 }
 
 const getToken = async () => {
   try {
-    let queryUrl = `${baseUrl}auth`;
+    let queryUrl = `${baseUrl}/auth`;
 
     const body = {
       username: username,
@@ -52,10 +55,8 @@ const getToken = async () => {
     };
 
     const response = await axios.post(queryUrl, body);
-    console.log(response.data.token);
     return response.data.token;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

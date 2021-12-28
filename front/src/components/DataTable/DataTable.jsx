@@ -10,7 +10,6 @@ import Paper from "@mui/material/Paper";
 import "./DataTable.css";
 
 const DataTable = ({ rows = [] }) => {
-  console.log(rows);
   return (
     <TableContainer
       component={Paper}
@@ -36,7 +35,7 @@ const DataTable = ({ rows = [] }) => {
                   <TableCell align='left'>{row.firstName}</TableCell>
                   <TableCell align='left'>{row.lastName}</TableCell>
                   <TableCell align='left'>{row.address}</TableCell>
-                  <TableCell align='left'>{row.SSN}</TableCell>
+                  <TableCell align='left'>{row.ssn}</TableCell>
                 </TableRow>
               ))
             : ""}
