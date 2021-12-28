@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import DataTable from "../DataTable/DataTable";
 import Loader from "../Loader/Loader";
+import TabComponent from "../TabComponent/TabComponent";
+import Timer from "../Timer";
 import Container from "@mui/material/Container";
 import { Button, FormGroup, TextField, Typography } from "@mui/material";
 import InputMask from "react-input-mask";
 import { getMembers, saveMember } from "../../services/apiService";
 import swal from "sweetalert";
-import { margin } from "@mui/system";
 
 const Form = () => {
   const [firstName, setFirstName] = useState(null);
@@ -15,8 +16,6 @@ const Form = () => {
   const [SSN, setSSN] = useState(null);
 
   const [loading, setLoading] = useState(true);
-
-  const [timeCounter, setTimeCounter] = useState(true);
 
   const [disabled, setDisabled] = useState(true);
 
@@ -41,7 +40,7 @@ const Form = () => {
     setTimeout(() => {
       loadMembers();
       setLoading(false);
-    }, 2000);
+    }, 1500);
   }, []);
 
   useEffect(() => {
@@ -84,70 +83,84 @@ const Form = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-      }}
-    >
-      <FormGroup style={{ minWidth: 500, margin: 50 }}>
-        <TextField
-          value={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value.trim());
-          }}
-          required
-          placeholder='First Name'
-          style={{ margin: 10 }}
-        ></TextField>
-        <TextField
-          value={lastName}
-          onChange={(e) => {
-            setLastName(e.target.value.trim());
-          }}
-          required
-          placeholder='Second Name'
-          style={{ margin: 10 }}
-        ></TextField>
-        <TextField
-          value={address}
-          onChange={(e) => {
-            setAddress(e.target.value.trim());
-          }}
-          required
-          placeholder='Address'
-          style={{ margin: 10 }}
-        ></TextField>
-        <InputMask
-          mask='999-99-9999'
-          value={SSN}
-          onChange={(e) => {
-            setSSN(e.target.value);
-          }}
-          required
-          placeholder='SSN'
-          style={{ margin: 10, height: 50, fontSize: "1em" }}
-        ></InputMask>
-        <Container style={{ display: "flex", justifyContent: "space-around" }}>
-          <Button variant='contained' onClick={reset}>
-            Reset
-          </Button>
-          <Button variant='contained' onClick={submit} disabled={disabled}>
-            Save
-          </Button>
-        </Container>
-      </FormGroup>
-      {loading ? (
-        <div className='loader-container'>
-          <Loader />
-          <Typography align='left' variant='h4'>
-            Loading data
-          </Typography>
-        </div>
-      ) : (
-        <DataTable rows={members}></DataTable>
-      )}
-    </div>
+    <>
+      <TabComponent></TabComponent>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
+        <FormGroup style={{ minWidth: 600, margin: 40 }}>
+          <TextField
+            value={firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+            }}
+            required
+            placeholder='First Name'
+            style={{ margin: 10 }}
+          ></TextField>
+          <TextField
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+            }}
+            required
+            placeholder='Second Name'
+            style={{ margin: 10 }}
+          ></TextField>
+          <TextField
+            value={address}
+            onChange={(e) => {
+              setAddress(e.target.value);
+            }}
+            required
+            placeholder='Address'
+            style={{ margin: 10 }}
+          ></TextField>
+          <InputMask
+            mask='999-99-9999'
+            value={SSN}
+            onChange={(e) => {
+              setSSN(e.target.value);
+            }}
+            required
+            placeholder='SSN'
+            style={{ margin: 10, height: 50, fontSize: "1em" }}
+          ></InputMask>
+          <Container
+            style={{ display: "flex", justifyContent: "space-around" }}
+          >
+            <Button variant='contained' onClick={reset} style={{ width: 100 }}>
+              Reset
+            </Button>
+            <Button
+              variant='contained'
+              onClick={submit}
+              disabled={disabled}
+              style={{ width: 100 }}
+            >
+              Save
+            </Button>
+          </Container>
+        </FormGroup>
+        {loading ? (
+          <div className='loader-container'>
+            <Loader />
+            <Typography align='left' variant='h4'>
+              Loading data
+            </Typography>
+          </div>
+        ) : (
+          <>
+            <DataTable rows={members}></DataTable>
+            <Timer setLoading={setLoading} loadMembers={loadMembers} />
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
