@@ -11,7 +11,6 @@ Use:
 ```
 npm install
 ```
-https://app.diagrams.net/#Wf8000a8714df51b5%2FF8000A8714DF51B5!93302
 
 This will install all modules listed as dependencies in package.json.
 
